@@ -7,7 +7,8 @@ const GRAPHDB_BASE_URL = "http://localhost:7200",
     GRAPHDB_REPOSITORY = "1",
     GRAPHDB_USERNAME = "admin",
     GRAPHDB_PASSWORD = "123",
-    GRAPHDB_CONTEXT_TEST = "http://www.ontotext.com/explicit";
+    GRAPHDB_CONTEXT_TEST = "http://ont.enapso.com/repo";
+    //GRAPHDB_CONTEXT_TEST = "http://www.ontotext.com/explicit";
 const DEFAULT_PREFIXES = [
     EnapsoGraphDBClient.PREFIX_OWL,
     EnapsoGraphDBClient.PREFIX_RDF,
@@ -15,7 +16,7 @@ const DEFAULT_PREFIXES = [
     EnapsoGraphDBClient.PREFIX_XSD,
     EnapsoGraphDBClient.PREFIX_PROTONS,
     {
-        prefix: "",
+        prefix: "entest",
         iri: "http://ont.enapso.com/1#",
     }
 ];
@@ -36,11 +37,12 @@ graphDBEndpoint.login(GRAPHDB_USERNAME,GRAPHDB_PASSWORD)
     console.log(err);
 });
 //insert a class
+
 graphDBEndpoint
   .update(
     `insert data {
       graph <${GRAPHDB_CONTEXT_TEST}> {
-      entest:TestClass rdf:type owl:Class}
+      entest:TestClass3 rdf:type owl:Class}
   }`
          )
   .then((result) => {
@@ -49,7 +51,10 @@ graphDBEndpoint
   .catch((err) => {
     console.log(err);
   });
+
   var response = {};
+
+
 /**
  * Returns a hello world to a user
  * Returns a hello world to a user
@@ -58,30 +63,24 @@ graphDBEndpoint
  * returns User
  **/
 exports.getUser = function(user) {
+  return new Promise(function(resolve, reject) {
 
-  graphDBEndpoint
-        .query(
-            `select * from <${GRAPHDB_CONTEXT_TEST}>
-              where {
-                ?class rdf:type owl:Class
-                filter(regex(str(?class), "http://ont.enapso.com/test#TestClass", "i")) .
-              }`        )
-        .then((result) => {
-            response.query =result;
-            console.log("Read a class:\n" + JSON.stringify(result, null, 2));
-
-        })
-        .catch((err) => {
-          response.query = err;
-        });
-
-    return new Promise(function(resolve, reject) {
-
-
+      graphDBEndpoint
+            .query(
+                `PREFIX : <http://www.ontogrid.net/StickyNote#>
+                  select * where {
+    	             :event3 ?p ?o
+                  } limit 10`        )
+            .then((result) => {
+                response.query = result;
+                //console.log("Read a class:\n" + JSON.stringify(result, null, 2));
+            })
+            .catch((err) => {
+              response.query = "error";
+            });
 
     response.username = "Hello world " + user;
     response.cumplido = "Que chico tan guapo, " + user;
-    // read the class
 
 
     resolve(response);
