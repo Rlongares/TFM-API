@@ -14,7 +14,6 @@ npm i @innotrade/enapso-graphdb-client --save
 On the other hand, most of the interesting current actions can modified from the Service - DefaultService.js
 
 
-const 
 
     GRAPHDB_BASE_URL = "http://localhost:7200",
 
@@ -30,7 +29,7 @@ The first constant specifies where we the database server is exposed. The reposi
 
 In case we have security activated we will need a user with the adecuate permissions which will be defined in the next two constants.
 
-This is the code where the authentication occurs.
+This is the code where the authentication occurs, which as previously explained it is only used in case security is activated.
 
     graphDBEndpoint.login(GRAPHDB_USERNAME,GRAPHDB_PASSWORD)
     .then((result) => {
