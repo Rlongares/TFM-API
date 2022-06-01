@@ -1,4 +1,12 @@
+
 'use strict';
+const {
+  getSessionFromStorage,
+  getSessionIdFromStorageAll,
+  Session,
+  login
+} = require("@inrupt/solid-client-authn-node");
+
 var cors = require('cors');
 var fs = require('fs'),
     path = require('path'),
@@ -25,7 +33,7 @@ app.use(cors());
 
 // Initialize the Swagger middleware
 swaggerTools.initializeMiddleware(swaggerDoc, function (middleware) {
-  
+
 
   // Interpret Swagger resources and attach metadata to request - must be first in swagger-tools middleware chain
   app.use(middleware.swaggerMetadata());
@@ -38,6 +46,9 @@ swaggerTools.initializeMiddleware(swaggerDoc, function (middleware) {
 
   // Serve the Swagger documents and Swagger UI
   app.use(middleware.swaggerUi());
+
+
+
 
   // Start the server
   http.createServer(app).listen(serverPort, function () {

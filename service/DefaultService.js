@@ -191,23 +191,35 @@ console.log("Cleaning policyList depending on the categories passed.");
   console.log("Start getting list of files to give back.");
 
   //Going through each file to see with which policies it identifies.
-
+  var count = 1;
   for (var pdfl = 0; pdfl< personalDataFilesList.length;pdfl++){
     var personalDataFile = await getFile( personalDataFilesList[pdfl], { fetch: fetch });
-    if(!isRawData(personalDataFile) & !isContainer(personalDataFile)){
+    if(!isRawData(personalDataFile)){
+
       personalDataFile = await getSolidDataset( personalDataFilesList[pdfl], { fetch: fetch });
+
       const personalDataFileThing = getThing(personalDataFile, personalDataFilesList[pdfl]);
+
       const targetDataURL = getUrlAll(personalDataFileThing, RDF.type);
-      const categoryIndex = targetDataURL.findIndex(element => element.includes("dpv"))
+
+      const categoryIndex = targetDataURL.findIndex(element => element.includes("dpv"));
+
+      if(categoryIndex > -1){
       console.log("TargetDataURl \n" + targetDataURL);
       console.log(targetDataURL[categoryIndex].split("#").pop());
       console.log("Creando resource to add "+personalDataFilesList[pdfl] );
-
-
+      const resourceName = personalDataFilesList[pdfl].substring(personalDataFilesList[pdfl].lastIndexOf("/") + 1).length > 0 ? personalDataFilesList[pdfl].substring(personalDataFilesList[pdfl].lastIndexOf("/") + 1) : "Container " + count;
+      var urlList = [personalDataFilesList[pdfl]];
+      console.log(urlList);
+      if(isContainer(personalDataFilesList[pdfl])){
+          urlList = urlList.concat(getContainedResourceUrlAll(personalDataFile));
+          count++;
+        }
+      console.log(urlList);
 
       var resourceToAdd = {
-         name: personalDataFilesList[pdfl].substring(personalDataFilesList[pdfl].lastIndexOf("/") + 1),
-         uri: personalDataFilesList[pdfl],
+         name: resourceName,
+         uri: urlList,
          categories: targetDataURL[categoryIndex].split("#").pop(),
          policies: [],
          recipients:"", //await getAgentAccessAll(personalDataFilesList[pdfl]),
@@ -300,7 +312,7 @@ console.log("Cleaning policyList depending on the categories passed.");
         console.log(resourceToAdd);
         result.format.resource.push(resourceToAdd);
       }
-
+    }
 
     }
 
