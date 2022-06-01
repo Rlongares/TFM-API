@@ -1,0 +1,9 @@
+{
+  "@context": "https://www.w3.org/ns/solid/oidc-context.jsonld",
+  "client_id": "https://my-app.example.com/myappid",
+  "redirect_uris": ["https://localhost:8080"],
+  "client_name": "TFM API",
+  "client_uri": "https://my-app.example.com/",
+  "policy_uri": "https://my-app.example.com/policy.html",
+  "contacts": ["rmlongares@gmail.com"]
+}

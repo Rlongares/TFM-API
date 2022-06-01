@@ -1,5 +1,5 @@
 'use strict';
-
+var cors = require('cors');
 var fs = require('fs'),
     path = require('path'),
     http = require('http');
@@ -20,8 +20,12 @@ var options = {
 var spec = fs.readFileSync(path.join(__dirname,'api/swagger.yaml'), 'utf8');
 var swaggerDoc = jsyaml.safeLoad(spec);
 
+
+app.use(cors());
+
 // Initialize the Swagger middleware
 swaggerTools.initializeMiddleware(swaggerDoc, function (middleware) {
+  
 
   // Interpret Swagger resources and attach metadata to request - must be first in swagger-tools middleware chain
   app.use(middleware.swaggerMetadata());
